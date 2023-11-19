@@ -2,15 +2,12 @@ from datetime import datetime
 from docx.shared import Cm
 from docxtpl import DocxTemplate, InlineImage
 import requests
-import json
 
 doc = DocxTemplate('Формирование_отчетов_о_произошедших_событиях.docx')
 
-# Данные для заполнения шаблона
 name = "Амбражевич А.В."
 today_date = datetime.today().strftime("%d.%m.%Y")
 today_time = datetime.today().strftime("%H:%M")
-
 
 servers = ['data01pcpu', 'data01pdisk', 'data01pnet', 'data01pnginx', 'data01pram',
            'data01ptime', 'db1cpu', 'db1disk', 'db1net', 'db1nginx', 'db1ram',
@@ -50,36 +47,29 @@ screenshot = ['cafap-data01pcpu.png', 'cafap-data01pdisk.png', 'cafap-data01pnet
 my_dict = dict(zip(servers, screenshot))
 
 print(my_dict)
+url = 'http://sm.mos.ru:8090/SM/9/rest/ditMFSMAPI'
+headers = {'Authorization': 'Basic RWFpc3RFQjo0a1FDeGFLWEdLMjc='}
 
-# Работа с API HPSM для получения номера ЗНИ
-#
-# url = 'http://sm.mos.ru:8090/SM/9/rest/ditMFSMAPI'
-# headers = {'Authorization': 'Basic RWFpc3RFQjo0a1FDeGFLWEdLMjc='}
-#
-# # Создаем тело запроса в формате JSON
-# payload = {
-#     "ditMFSMAPI": {
-#         "Action": "getObjectList",
-#         "Filename": "Изменение",
-#         "ParamsNames": [
-#             "Поисковый запрос"
-#         ],
-#         "ParamsValues": [
-#             "(\"Поле: Статус\"=\"Зарегистрирован\")"
-#             " and (\"Поле: Сервис\"=\"Формирование отчётов о произошедших событиях\")"
-#             " and (\"Поле: Направление\"=\"Поддержка и сопровождение ЦАФАП\")"
-#         ]
-#     }
-# }
-#
-# отправляем запрос
-#
-# response = requests.post(url, headers=headers, json=payload)
-# json_data = response.json()
-number = 2
-#str(json_data['ditMFSMAPI']['Response'][1])
+payload = {
+    "ditMFSMAPI": {
+        "Action": "getObjectList",
+        "Filename": "Изменение",
+        "ParamsNames": [
+            "Поисковый запрос"
+        ],
+        "ParamsValues": [
+            "(\"Поле: Статус\"=\"Зарегистрирован\")"
+            " and (\"Поле: Сервис\"=\"Формирование отчётов о произошедших событиях\")"
+            " and (\"Поле: Направление\"=\"Поддержка и сопровождение ЦАФАП\")"
+        ]
+    }
+}
 
-# Внесение данных из переменных в файл
+
+response = requests.post(url, headers=headers, json=payload)
+json_data = response.json()
+number = str(json_data['ditMFSMAPI']['Response'][1])
+
 def load_images(my_dict):
     images_dict = {}
     for key, value in my_dict.items():
@@ -88,8 +78,6 @@ def load_images(my_dict):
     return images_dict
 
 images = load_images(my_dict)
-
-print(images)
 
 context = {'number': number, 'emp_name': name, 'date': today_date, 'time': today_time, }
 context.update(images)

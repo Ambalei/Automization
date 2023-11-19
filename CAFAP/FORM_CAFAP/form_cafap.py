@@ -1,24 +1,18 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-import re
 from datetime import datetime, timedelta
 from selenium.webdriver.firefox.options import Options
 
-#Настройки для запуска в headless режиме
 firefox_options = Options()
 firefox_options.add_argument('-headless')
 browser = webdriver.Firefox(options=firefox_options)
 browser.set_window_size(1024, 720)
 browser.implicitly_wait(10)
 
-# Получаем текущую дату и время
 today_date = datetime.today()
-# Переводим в формат Unix времени (timestamp)
 today_unix_time = str(int(today_date.timestamp()))
-# Получаем дату, предшествующую текущей на 8 дней
 past_date = (today_date - timedelta(days=8))
-# Переводим в формат Unix времени (timestamp)
 past_unix_time = str(int(past_date.timestamp()))
 
 today = f'&from={today_unix_time}000'
@@ -85,5 +79,4 @@ try:
 
 finally:
     time.sleep(5)
-    # закрываем браузер после всех манипуляций
     browser.quit()
