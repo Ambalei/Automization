@@ -2,16 +2,16 @@
 FROM centos:latest
 
 # Обновляем пакеты
-RUN yum -y update && yum clean all
+RUN sudo yum -y update
 
 # Устанавливаем необходимые пакеты
-RUN yum -y install epel-release \
-    && yum -y install python3 \
-    && yum -y install python3-pip \
-    && yum -y install wget \
-    && yum -y install unzip \
-    && yum -y install Xvfb \
-    && yum -y install libX11 libXcomposite libXcursor libXdamage libXext libXi libXtst libXrandr libXScrnSaver libXss libXxf86vm libXinerama libpng-devel libXrandr-devel GConf2
+RUN sudo yum -y install epel-release \
+    && sudo yum -y install python3 \
+    && sudo yum -y install python3-pip \
+    && sudo yum -y install wget \
+    && sudo yum -y install unzip \
+    && sudo yum -y install Xvfb \
+    && sudo yum -y install libX11 libXcomposite libXcursor libXdamage libXext libXi libXtst libXrandr libXScrnSaver libXss libXxf86vm libXinerama libpng-devel libXrandr-devel GConf2
 
 # Устанавливаем ChromeDriver
 RUN wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip \
@@ -22,7 +22,7 @@ RUN wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_l
 
 # Устанавливаем Google Chrome
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm \
-    && yum -y localinstall google-chrome-stable_current_x86_64.rpm \
+    && sudo yum -y localinstall google-chrome-stable_current_x86_64.rpm \
     && rm google-chrome-stable_current_x86_64.rpm
 
 # Копируем зависимости для тестов
