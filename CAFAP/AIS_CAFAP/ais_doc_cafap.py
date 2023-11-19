@@ -1,10 +1,12 @@
+import locale
+locale.setlocale(locale.LC_ALL, 'en_US.utf-8')  # Используйте правильную локаль для вашей системы
 from datetime import datetime
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Cm
 import requests
 
+
 doc = DocxTemplate('Анализ_состояния_вычислительной_среды_АИС.docx')
-name = "Амбражевич А.В."
 today_date = datetime.today().strftime("%d.%m.%Y")
 today_time = datetime.today().strftime("%H:%M")
 
@@ -39,7 +41,7 @@ def getScreenshot(spath):
     return InlineImage(doc, spath, width=Cm(15), height=Cm(15))
 
 
-context = {'number': number, 'emp_name': name, 'date': today_date, 'time': today_time, 'picture': getScreenshot('screenshot.png')}
+context = {'number': number, 'date': today_date, 'time': today_time, 'picture': getScreenshot('screenshot.png')}
 doc.render(context)
-file_name = f'Анализ_состояния_вычислительной_среды_АИС_{today_date}.docx'
+file_name = f'Анализ_состояния_вычислительной_среды_АИС.docx'
 doc.save(file_name)
