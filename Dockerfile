@@ -2,7 +2,7 @@
 FROM python:3.8-slim
 
 # Установка необходимых пакетов для поддержки русских символов
-RUN apt-get update && apt-get -y install locales
+RUN yum update && yum -y install locales
 RUN locale-gen ru_RU.UTF-8
 RUN dpkg-reconfigure locales
 
@@ -12,7 +12,7 @@ ENV LANG ru_RU.UTF-8
 ENV LANGUAGE ru_RU.UTF-8
 
 # Устанавливаем зависимости
-RUN apt-get update && apt-get install -y \
+RUN yum update && yum install -y \
     firefox-esr \
     wget \
     unzip \
