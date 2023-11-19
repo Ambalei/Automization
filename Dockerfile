@@ -1,41 +1,39 @@
-# Используем базовый образ с Python
-FROM python:3.8-slim
+# Используем базовый образ CentOS
+FROM centos:latest
 
-# Установка необходимых пакетов для поддержки русских символов
-RUN yum update && yum -y install locales
-RUN locale-gen ru_RU.UTF-8
-RUN dpkg-reconfigure locales
+# Обновляем пакеты
+RUN yum -y update && yum clean all
 
-# Задаем переменные окружения для правильной локали
-ENV LC_ALL ru_RU.UTF-8
-ENV LANG ru_RU.UTF-8
-ENV LANGUAGE ru_RU.UTF-8
+# Устанавливаем необходимые пакеты
+RUN yum -y install epel-release \
+    && yum -y install python3 \
+    && yum -y install python3-pip \
+    && yum -y install wget \
+    && yum -y install unzip \
+    && yum -y install Xvfb \
+    && yum -y install libX11 libXcomposite libXcursor libXdamage libXext libXi libXtst libXrandr libXScrnSaver libXss libXxf86vm libXinerama libpng-devel libXrandr-devel GConf2
+
+# Устанавливаем ChromeDriver
+RUN wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip \
+    && unzip chromedriver_linux64.zip \
+    && mv chromedriver /usr/local/bin/chromedriver \
+    && chmod +x /usr/local/bin/chromedriver \
+    && rm chromedriver_linux64.zip
+
+# Устанавливаем Google Chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm \
+    && yum -y localinstall google-chrome-stable_current_x86_64.rpm \
+    && rm google-chrome-stable_current_x86_64.rpm
+
+# Копируем зависимости для тестов
+COPY requirements.txt /app/requirements.txt
 
 # Устанавливаем зависимости
-RUN yum update && yum install -y \
-    firefox-esr \
-    wget \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
-
-# Устанавливаем Geckodriver
-RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz \
-    && tar -xzvf geckodriver-v0.30.0-linux64.tar.gz \
-    && chmod +x geckodriver \
-    && mv geckodriver /usr/local/bin/ \
-    && rm geckodriver-v0.30.0-linux64.tar.gz
-
-# Создаем и переключаемся в рабочую директорию
 WORKDIR /app
-
-# Копируем зависимости
-COPY requirements.txt .
-
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Копируем тестовый код
-COPY . .
+COPY . /app
 
-# Команда для запуска тестов
-CMD ["pytest", "tests"]
+# Запускаем тесты
+CMD ["python3", "CAFAP/AIS_CAFAP/ais_cafap/py"]
