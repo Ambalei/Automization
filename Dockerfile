@@ -29,4 +29,4 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
-CMD ["python3", "CAFAP/AIS_CAFAP/ais_cafap/py"]
+CMD ["python3", "tests/CAFAP/AIS_CAFAP/ais_cafap.py"]

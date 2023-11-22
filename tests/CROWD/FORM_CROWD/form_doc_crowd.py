@@ -4,19 +4,16 @@ from docxtpl import DocxTemplate, InlineImage
 import requests
 import json
 
-doc = DocxTemplate('Формирование_отчетов_о_произошедших_событиях_.docx')
+doc = DocxTemplate('form_crowd_tpl.docx')
 
 # Данные для заполнения шаблона
 name = "Амбражевич А.В."
 today_date = datetime.today().strftime("%d.%m.%Y")
 today_time = datetime.today().strftime("%H:%M")
 
+# Загружаем данные серверов из файла
 with open('photos_dict.json', 'r') as file:
-    # Загружаем данные из файла
     photos_dict = json.load(file)
-
-print(photos_dict)
-
 
 # Работа с API HPSM для получения номера ЗНИ
 
@@ -38,14 +35,10 @@ payload = {
         ]
     }
 }
-
 # отправляем запрос
 response = requests.post(url, headers=headers, json=payload)
 json_data = response.json()
 number = str(json_data['ditMFSMAPI']['Response'][1])
-
-
-# Внесение данных из переменных в файл
 def load_images(my_dict):
     images_dict = {}
     for key, value in my_dict.items():
@@ -53,14 +46,9 @@ def load_images(my_dict):
         images_dict[key] = graph
     return images_dict
 
-
 images = load_images(photos_dict)
-
-print(images)
-
 context = {'number': number, 'emp_name': name, 'date': today_date, 'time': today_time}
 context.update(images)
-print(context)
 doc.render(context)
-file_name = f'Формирование_отчетов_о_произошедших_событиях_{today_date}.docx'
+file_name = f'form_crowd.docx'
 doc.save(file_name)

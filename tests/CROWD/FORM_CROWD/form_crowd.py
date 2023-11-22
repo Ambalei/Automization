@@ -48,14 +48,10 @@ def update_server_name(name):
     search = re.sub('-[\d\.]+', '', name)
     return search.replace('crowd-', '')
 
-
 def update_server_link(link):
     return link.replace('-10.', '&var-node=10.')
 
-
 links = {update_server_name(name): update_server_link(name) for name in server_list}
-
-print(links)
 
 try:
     browser.get('https://cmon.mos.ru/')
@@ -72,20 +68,15 @@ try:
 
     photos_names = []
     photos_files = []
-
-
     def screenshot_garaph(panel_cpu, cpu):
         for key, value in links.items():
             link = global_link + value + today + past + panel_cpu
-            cpu_screen = browser.get(link)
+            screen = browser.get(link)
             time.sleep(5)
             browser.save_screenshot(f'{key}{cpu}.png')
             photos_names.append(f'{key}{cpu}')
             photos_files.append(f'{key}{cpu}.png')
-            print(photos_names)
-            print(photos_files)
             print(f'{key}{cpu}')
-
 
     screenshot_garaph(panel_cpu, cpu)
     screenshot_garaph(panel_ram, ram)
@@ -93,20 +84,11 @@ try:
     screenshot_garaph(panel_disk, disk)
     screenshot_garaph(panel_time, nginx_time)
     screenshot_garaph(panel_success, nginx_success)
-    #
-    # with open('photos_names.txt', 'w') as file:
-    #     # Записываем словарь в файл в формате JSON
-    #     json.dump(photos_names, file)
-    #
-    # with open('photos_files.txt', 'w') as file:
-    #     # Записываем словарь в файл в формате JSON
-    #     json.dump(photos_files, file)
 
     photos_dict = dict(zip(photos_names, photos_files))
 
-
+    # Записываем словарь в файл в формате JSON
     with open('photos_dict.json', 'w') as file:
-        # Записываем словарь в файл в формате JSON
         json.dump(photos_dict, file)
 
 finally:

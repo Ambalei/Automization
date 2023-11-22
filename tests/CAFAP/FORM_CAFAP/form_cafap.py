@@ -1,7 +1,9 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import json
+import re
 import time
 from datetime import datetime, timedelta
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 
 firefox_options = Options()
@@ -64,11 +66,10 @@ try:
     def screenshot_garaph(panel_cpu, cpu):
         for key, value in links.items():
             link = global_link + value + today + past + panel_cpu
-            cpu_screen = browser.get(link)
+            screen = browser.get(link)
             time.sleep(5)
             print(f'{key}{cpu}')
             browser.save_screenshot(f'{key}{cpu}.png')
-
 
     screenshot_garaph(panel_cpu, cpu)
     screenshot_garaph(panel_ram, ram)

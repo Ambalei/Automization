@@ -3,7 +3,7 @@ from docx.shared import Cm
 from docxtpl import DocxTemplate, InlineImage
 import requests
 
-doc = DocxTemplate('form_cafap.docx')
+doc = DocxTemplate('form_cafap_tpl.docx')
 
 name = "Амбражевич А.В."
 today_date = datetime.today().strftime("%d.%m.%Y")
@@ -46,7 +46,6 @@ screenshot = ['cafap-data01pcpu.png', 'cafap-data01pdisk.png', 'cafap-data01pnet
 
 my_dict = dict(zip(servers, screenshot))
 
-print(my_dict)
 url = 'http://sm.mos.ru:8090/SM/9/rest/ditMFSMAPI'
 headers = {'Authorization': 'Basic RWFpc3RFQjo0a1FDeGFLWEdLMjc='}
 
@@ -64,12 +63,9 @@ payload = {
         ]
     }
 }
-
-
 response = requests.post(url, headers=headers, json=payload)
 json_data = response.json()
 number = str(json_data['ditMFSMAPI']['Response'][1])
-
 def load_images(my_dict):
     images_dict = {}
     for key, value in my_dict.items():
@@ -78,9 +74,8 @@ def load_images(my_dict):
     return images_dict
 
 images = load_images(my_dict)
-
 context = {'number': number, 'emp_name': name, 'date': today_date, 'time': today_time, }
 context.update(images)
 doc.render(context)
-file_name = f'Формирование_отчётов_о_произошедших_событиях{today_date}.docx'
+file_name = f'form_cafap.docx'
 doc.save(file_name)
