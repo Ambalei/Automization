@@ -11,7 +11,7 @@ browser.set_window_size(1280, 2000)
 browser.implicitly_wait(10)
 
 today_date = datetime.today().strftime("%Y-%m-%d")
-past_date = (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d")
+past_date = (datetime.today() - timedelta(days=8)).strftime("%Y-%m-%d")
 
 try:
     browser.get('https://mon-dc.mos.ru/')
@@ -23,7 +23,8 @@ try:
     button = browser.find_element(By.XPATH, '//form/button')
     button.click()
     time.sleep(10)
-    browser.get('https://mon-dc.mos.ru/d/1_hpN8jWz/systems?orgId=1&var-system_name=%D0%9A%D0%9F%D0%9F%D0%9C&var-vm=All')
+
+    browser.get('https://mon-dc.mos.ru/d/1_hpN8jWz/systems?orgId=1&var-system_name=%D0%9A%D0%9F%D0%9F%D0%9C')
     date_input_button = browser.find_element(By.XPATH, '//header/nav/div[2]/div[1]/div[1]/button[1]')
     date_input_button.click()
     past_input = browser.find_element(By.XPATH, '//section/div/div[1]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div/div[1]/input')
@@ -39,7 +40,6 @@ try:
     test_hide_button.click()
     time.sleep(15)
     browser.save_screenshot("screenshot.png")
-
 
 finally:
     time.sleep(5)

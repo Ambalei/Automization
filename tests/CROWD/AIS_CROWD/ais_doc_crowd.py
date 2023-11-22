@@ -1,14 +1,9 @@
-import docx
 from datetime import datetime
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Cm
 import requests
-import json
 
-doc = DocxTemplate('Анализ_состояния_вычислительной_среды_АИС.docx')
-
-# Данные для заполнения шаблона
-name = "Амбражевич А.В."
+doc = DocxTemplate('ais_crowd_tpl.docx')
 today_date = datetime.today().strftime("%d.%m.%Y")
 today_time = datetime.today().strftime("%H:%M")
 
@@ -36,15 +31,14 @@ payload = {
     }
 }
 
-# отправляем запрос
+# Отправляем запрос
 response = requests.post(url, headers=headers, json=payload)
 json_data = response.json()
 number = json_data['ditMFSMAPI']['Response'][1]
 
 # Внесение данных из переменных в файл
-
-context = {'emp_name': name, 'date': today_date, 'time': today_time, 'picture': graph}
+context = {'number': number, 'date': today_date, 'time': today_time, 'picture': graph}
 doc.render(context)
-file_name = f'Анализ_состояния_вычислительной_среды_АИС_{today_date}.docx'
+file_name = f'ais_crowd.docx'
 doc.save(file_name)
 

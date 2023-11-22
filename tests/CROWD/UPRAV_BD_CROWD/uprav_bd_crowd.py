@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-import math
 from datetime import datetime, timedelta
 from selenium.webdriver.firefox.options import Options
 
@@ -44,7 +43,6 @@ try:
     browser.save_screenshot("screenshot_DB.png")
 
 finally:
-    # успеваем скопировать код за 30 секунд
     time.sleep(5)
     # закрываем браузер после всех манипуляций
     browser.quit()

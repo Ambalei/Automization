@@ -1,39 +1,32 @@
-# Используем базовый образ CentOS
-FROM centos:latest
+FROM python:3.8
 
-# Обновляем пакеты
-RUN sudo yum -y update
+# Adding trusting keys to apt for repositories
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 
-# Устанавливаем необходимые пакеты
-RUN sudo yum -y install epel-release \
-    && sudo yum -y install python3 \
-    && sudo yum -y install python3-pip \
-    && sudo yum -y install wget \
-    && sudo yum -y install unzip \
-    && sudo yum -y install Xvfb \
-    && sudo yum -y install libX11 libXcomposite libXcursor libXdamage libXext libXi libXtst libXrandr libXScrnSaver libXss libXxf86vm libXinerama libpng-devel libXrandr-devel GConf2
+# Adding Google Chrome to the repositories
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 
-# Устанавливаем ChromeDriver
-RUN wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip \
-    && unzip chromedriver_linux64.zip \
-    && mv chromedriver /usr/local/bin/chromedriver \
-    && chmod +x /usr/local/bin/chromedriver \
-    && rm chromedriver_linux64.zip
+# Updating apt to see and install Google Chrome
+RUN apt-get -y update
 
-# Устанавливаем Google Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm \
-    && sudo yum -y localinstall google-chrome-stable_current_x86_64.rpm \
-    && rm google-chrome-stable_current_x86_64.rpm
+# Magic happens
+RUN apt-get install -y google-chrome-stable
+# Installing Unzip
+RUN apt-get install -yqq unzip
 
-# Копируем зависимости для тестов
-COPY requirements.txt /app/requirements.txt
+# Download the Chrome Driver
+RUN wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip 
 
-# Устанавливаем зависимости
-WORKDIR /app
-RUN pip3 install --no-cache-dir -r requirements.txt
+# Unzip the Chrome Driver into /usr/local/bin directory
+RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
-# Копируем тестовый код
+# Set display port as an environment variable
+ENV DISPLAY=:99
 COPY . /app
+WORKDIR /app
 
-# Запускаем тесты
+RUN pip install --upgrade pip
+
+RUN pip install -r requirements.txt
+
 CMD ["python3", "CAFAP/AIS_CAFAP/ais_cafap/py"]

@@ -3,7 +3,7 @@ from docx.shared import Cm
 from docxtpl import DocxTemplate, InlineImage
 import requests
 
-doc = DocxTemplate('Формирование_отчетов_о_произошедших_событиях.docx')
+doc = DocxTemplate('form_cafap.docx')
 
 name = "Амбражевич А.В."
 today_date = datetime.today().strftime("%d.%m.%Y")
