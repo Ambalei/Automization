@@ -26,7 +26,7 @@ WORKDIR /app
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Копируем тестовый код
-COPY . /app
+COPY . ./app
 
 # Запускаем тесты
-CMD ["python3", "CAFAP/AIS_CAFAP/ais_cafap/py"]
+CMD ["python3", "tests/CAFAP/AIS_CAFAP/ais_cafap.py"]

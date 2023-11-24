@@ -6,8 +6,9 @@ from selenium.webdriver.firefox.options import Options
 
 firefox_options = Options()
 firefox_options.add_argument('-headless')
+firefox_options.add_argument('--window-size=1280x1400')
 browser = webdriver.Firefox(options=firefox_options)
-browser.set_window_size(1280, 1400)
+# browser.set_window_size(1280, 1400)
 browser.implicitly_wait(10)
 
 today_date = datetime.today().strftime("%Y-%m-%d")
