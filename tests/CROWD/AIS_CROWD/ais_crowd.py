@@ -6,7 +6,7 @@ from selenium.webdriver.firefox.options import Options
 
 firefox_options = Options()
 firefox_options.add_argument('-headless')
-browser = webdriver.Firefox(options=firefox_options)
+browser = webdriver.Firefox()
 browser.set_window_size(1280, 2000)
 browser.implicitly_wait(10)
 
